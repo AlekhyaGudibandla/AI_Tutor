@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ai_tutor_backend:local
+    container_name: ai_tutor_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: ai_tutor_frontend:local
+    container_name: ai_tutor_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_ENDPOINT=http://ai_tutor_backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
